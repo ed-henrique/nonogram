@@ -1,0 +1,13 @@
+{
+  "name": "nonogram",
+  "version": "1.0.0",
+  "description": "Nonogram generator by random pixel allocation or by reading a pixel art. Includes solver.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./js/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Eduardo Machado",
+  "license": "MIT"
+}
