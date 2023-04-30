@@ -5,14 +5,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/index.css">
     <title>ノノグラム</title>
 </head>
 
 <body>
     <div class="switch-mode">
         <h1>ノノグラム</h1>
-        <button class="switch" onclick="switchMode()"></button>
+        <button class="switch">
+            <div class="not-selected">
+                <i class="cross fa-solid fa-xmark"></i>
+            </div>
+            <div class="selected">
+                <i class="square fa-solid fa-square"></i>
+            </div>
+        </button>
     </div>
     <div class="game">
         <div></div>
@@ -22,7 +28,7 @@
     </div>
 </body>
 
-<script src="js/index.js"></script>
+<script src="./dist/main.js"></script>
 <script src="https://kit.fontawesome.com/ae86d24d99.js" crossorigin="anonymous"></script>
 
 </html>

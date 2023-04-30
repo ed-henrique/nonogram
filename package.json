@@ -1,13 +1,21 @@
 {
   "name": "nonogram",
+  "type": "module",
   "version": "1.0.0",
   "description": "Nonogram generator by random pixel allocation or by reading a pixel art. Includes solver.",
   "main": "index.js",
   "scripts": {
     "start": "node ./js/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "keywords": [],
   "author": "Eduardo Machado",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "css-loader": "^6.7.3",
+    "style-loader": "^3.3.2",
+    "webpack": "^5.81.0",
+    "webpack-cli": "^5.0.2"
+  }
 }

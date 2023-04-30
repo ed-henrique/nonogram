@@ -25,6 +25,10 @@ span {
   flex-direction: column;
 }
 
+span.vertical:not(:first-child) {
+  padding-left: 8px;
+}
+
 button {
   border: none;
   outline: none;
@@ -62,7 +66,7 @@ body {
   background-color: var(--secondary-color);
 }
 
-.switch > div {
+.switch>div {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -118,7 +122,6 @@ body {
 .board-values-horizontal p {
   color: var(--primary-color);
   height: 33px;
-  letter-spacing: 6px;
   display: flex;
   align-items: center;
 }
@@ -132,6 +135,7 @@ body {
   gap: 3px;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 
 .board-cross {
