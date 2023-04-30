@@ -1,5 +1,5 @@
 const BOARD_SIZE = 15;
-const RANDOMNESS = 0.5; // Lesser means fewer correct squares
+const RANDOMNESS = 0.7; // Lesser means fewer correct squares
 let SQUARE_MODE = false;
 
 const boardHTML = document.querySelector(".board");
@@ -37,6 +37,10 @@ const cellValue = () => {
 	return Math.random() < RANDOMNESS;
 };
 
+const showCross = () => {
+	return Math.random() < RANDOMNESS / 5;
+};
+
 const board = Array(BOARD_SIZE)
 	.fill()
 	.map(() => Array(BOARD_SIZE).fill().map(cellValue));
@@ -70,7 +74,7 @@ const countBlocksVertical = () => {
 
 	blockNumberTotal.forEach((blockCount) => {
 		boardValuesVerticalHTML.innerHTML += `
-				<p>${blockCount.join(" ")}</p>
+				<p><span>${blockCount.join("</span><span>")}</span></p>
 			`;
 	});
 };
@@ -116,6 +120,16 @@ const markSquare = (i, j) => {
 			<button class="item2"></button>
 			`;
 		}
+	} else {
+		if (!board[i][j]) {
+			const cellHTML = document.getElementById(`${i}-${j}`);
+
+			cellHTML.outerHTML = `
+			<button class="item">
+				<i class="board-cross fa-solid fa-xmark"></i>
+			</button>
+			`;
+		}
 	}
 };
 
@@ -125,11 +139,30 @@ const showBoard = () => {
 
 	boardMask.forEach((line, i) => {
 		line.forEach((_cell, j) => {
-			const cellHTML = `
-			<button id="${i}-${j}" class="item" onclick="markSquare(${i}, ${j})"></button>
-			`;
+			if (!board[i][j]) {
+				if (showCross()) {
+					const cellHTML = `
+					<button id="${i}-${j}" class="item" onclick="markSquare(${i}, ${j})">
+						<i class="board-cross fa-solid fa-xmark"></i>
+					</button>
+					`;
 
-			boardHTML.innerHTML += cellHTML;
+					boardHTML.innerHTML += cellHTML;
+				} else {
+					const cellHTML = `
+					<button id="${i}-${j}" class="item" onclick="markSquare(${i}, ${j})"></button>
+					`;
+
+					boardHTML.innerHTML += cellHTML;
+				}
+			} else {
+				const cellHTML = `
+				<button id="${i}-${j}" class="item" onclick="markSquare(${i}, ${j})"></button>
+				`;
+
+				boardHTML.innerHTML += cellHTML;
+			}
+
 			count++;
 		});
 	});

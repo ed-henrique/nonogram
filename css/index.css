@@ -11,6 +11,12 @@
 h1 {
     color: #F26B5E;
     font-size: 70px;
+    margin-bottom: 20px;
+}
+
+span {
+    display: flex;
+    flex-direction: column;
 }
 
 button {
@@ -93,9 +99,8 @@ body {
 .board-values-vertical p {
     color: #F26B5E;
     width: 33px;
-    writing-mode: vertical-rl;
-    text-orientation: upright;
     display: flex;
+    flex-direction: column;
     align-items: center;
 }
 
@@ -125,6 +130,10 @@ body {
     gap: 3px;
     justify-content: center;
     align-items: center;
+}
+
+.board-cross {
+    color: #023E73;
 }
 
 .item {
