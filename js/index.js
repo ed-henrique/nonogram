@@ -12,42 +12,37 @@ const boardValuesHorizontalHTML = document.querySelector(
 const switchButtonHTML = document.querySelector(".switch");
 
 const switchMode = () => {
-	if ((SQUARE_MODE = !SQUARE_MODE)) {
-		switchButtonHTML.innerHTML = `
-		<div class="not-selected">
-			<i class="cross fa-solid fa-xmark"></i>
-		</div>
-		<div class="selected">
-			<i class="square fa-solid fa-square"></i>
-		</div>
-		`;
-	} else {
-		switchButtonHTML.innerHTML = `
-		<div class="selected">
-			<i class="cross fa-solid fa-xmark"></i>
-		</div>
-		<div class="not-selected">
-			<i class="square fa-solid fa-square"></i>
-		</div>
-		`;
-	}
+	SQUARE_MODE = !SQUARE_MODE;
+
+	const crossClass = SQUARE_MODE ? "not-selected" : "selected";
+	const squareClass = SQUARE_MODE ? "selected" : "not-selected";
+
+	const crossHTML = `
+      <div class="${crossClass}">
+        <i class="cross fa-solid fa-xmark"></i>
+      </div>
+    `;
+
+	const squareHTML = `
+      <div class="${squareClass}">
+        <i class="square fa-solid fa-square"></i>
+      </div>
+    `;
+
+	switchButtonHTML.innerHTML = crossHTML + squareHTML;
 };
 
-const cellValue = () => {
-	return Math.random() < RANDOMNESS;
-};
+const cellValue = () => Math.random() < RANDOMNESS;
 
-const showCross = () => {
-	return Math.random() < RANDOMNESS / 5;
-};
+const showCross = () => Math.random() < RANDOMNESS / 5;
 
-const board = Array(BOARD_SIZE)
-	.fill()
-	.map(() => Array(BOARD_SIZE).fill().map(cellValue));
+const board = Array.from({ length: BOARD_SIZE }, () =>
+	Array.from({ length: BOARD_SIZE }, cellValue),
+);
 
-const boardMask = Array(BOARD_SIZE)
-	.fill()
-	.map(() => Array(BOARD_SIZE).fill(false));
+const boardMask = Array.from({ length: BOARD_SIZE }, () =>
+	Array.from({ length: BOARD_SIZE }, () => false),
+);
 
 const countBlocksVertical = () => {
 	const blockNumberTotal = [];
@@ -72,17 +67,15 @@ const countBlocksVertical = () => {
 		blockNumberTotal.push(blockNumber);
 	}
 
-	blockNumberTotal.forEach((blockCount) => {
-		boardValuesVerticalHTML.innerHTML += `
-				<p><span>${blockCount.join("</span><span>")}</span></p>
-			`;
-	});
+	boardValuesVerticalHTML.innerHTML = blockNumberTotal
+		.map(
+			(blockCount) => `<p><span>${blockCount.join("</span><span>")}</span></p>`,
+		)
+		.join("");
 };
 
 const countBlocksHorizontal = () => {
-	const blockNumberTotal = [];
-
-	board.forEach((line) => {
+	const blockNumberTotal = board.map((line) => {
 		let counter = 0;
 		const blockNumber = [];
 
@@ -99,37 +92,28 @@ const countBlocksHorizontal = () => {
 			blockNumber.push(counter);
 		}
 
-		blockNumberTotal.push(blockNumber);
+		return blockNumber;
 	});
 
-	blockNumberTotal.forEach((blockCount) => {
-		boardValuesHorizontalHTML.innerHTML += `
-			<p>${blockCount.join(" ")}</p>
-		`;
-	});
+	boardValuesHorizontalHTML.innerHTML = blockNumberTotal
+		.map((blockCount) => `<p>${blockCount.join(" ")}</p>`)
+		.join("");
 };
 
 const markSquare = (i, j) => {
-	if (SQUARE_MODE) {
-		if (board[i][j]) {
-			boardMask[i][j] = true;
-
-			const cellHTML = document.getElementById(`${i}-${j}`);
-
-			cellHTML.outerHTML = `
-			<button class="item2"></button>
-			`;
-		}
-	} else {
-		if (!board[i][j]) {
-			const cellHTML = document.getElementById(`${i}-${j}`);
-
-			cellHTML.outerHTML = `
-			<button class="item">
-				<i class="board-cross fa-solid fa-xmark"></i>
-			</button>
-			`;
-		}
+	if (SQUARE_MODE && board[i][j]) {
+		boardMask[i][j] = true;
+		const cellHTML = document.getElementById(`${i}-${j}`);
+		cellHTML.outerHTML = `
+      <button class="item2"></button>
+    `;
+	} else if (!SQUARE_MODE && !board[i][j]) {
+		const cellHTML = document.getElementById(`${i}-${j}`);
+		cellHTML.outerHTML = `
+      <button class="item">
+        <i class="board-cross fa-solid fa-xmark"></i>
+      </button>
+    `;
 	}
 };
 
@@ -139,30 +123,21 @@ const showBoard = () => {
 
 	boardMask.forEach((line, i) => {
 		line.forEach((_cell, j) => {
+			const buttonID = `${i}-${j}`;
+			const buttonClass = "item";
+			const buttonOnClick = `markSquare(${i}, ${j})`;
+
+			let buttonInnerHTML = "";
 			if (!board[i][j]) {
-				if (showCross()) {
-					const cellHTML = `
-					<button id="${i}-${j}" class="item" onclick="markSquare(${i}, ${j})">
-						<i class="board-cross fa-solid fa-xmark"></i>
-					</button>
-					`;
-
-					boardHTML.innerHTML += cellHTML;
-				} else {
-					const cellHTML = `
-					<button id="${i}-${j}" class="item" onclick="markSquare(${i}, ${j})"></button>
-					`;
-
-					boardHTML.innerHTML += cellHTML;
-				}
+				const buttonIcon = showCross()
+					? "<i class='board-cross fa-solid fa-xmark'></i>"
+					: "";
+				buttonInnerHTML = `<button id='${buttonID}' class='${buttonClass}' onclick='${buttonOnClick}'>${buttonIcon}</button>`;
 			} else {
-				const cellHTML = `
-				<button id="${i}-${j}" class="item" onclick="markSquare(${i}, ${j})"></button>
-				`;
-
-				boardHTML.innerHTML += cellHTML;
+				buttonInnerHTML = `<button id='${buttonID}' class='${buttonClass}' onclick='${buttonOnClick}'></button>`;
 			}
 
+			boardHTML.innerHTML += buttonInnerHTML;
 			count++;
 		});
 	});
