@@ -168,8 +168,10 @@ class Board {
 
 	checkWin() {
 		return (
-			gridMask.length === grid.length &&
-			gridMask.every((row, i) => row.every((val, j) => val === grid[i][j]))
+			this.gridMask.length === this.grid.length &&
+			this.gridMask.every((row, i) =>
+				row.every((val, j) => val === this.grid[i][j]),
+			)
 		);
 	}
 }

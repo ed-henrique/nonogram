@@ -23,10 +23,17 @@ const showBoard = () => {
 
 			let buttonInnerHTML = "";
 			if (!board.getCellValue(i, j)) {
-				const buttonIcon = showCross()
-					? "<i class='board-cross fa-solid fa-xmark'></i>"
-					: "";
-				buttonInnerHTML = `<button id='${buttonID}' class='${buttonClass}'>${buttonIcon}</button>`;
+				if (showCross()) {
+					board.markCell(i, j, true);
+
+					buttonInnerHTML = `
+					<button class="item">
+						<i class="board-cross fa-solid fa-xmark"></i>
+					</button>
+					`;
+				} else {
+					buttonInnerHTML = `<button id='${buttonID}' class='${buttonClass}'></button>`;
+				}
 			} else {
 				buttonInnerHTML = `<button id='${buttonID}' class='${buttonClass}'></button>`;
 			}
@@ -61,58 +68,93 @@ const showBlockCountHorizontal = () => {
 };
 
 const listenBoardButtons = () => {
+	let isDragging = false;
 	const boardButtons = document.querySelectorAll(".item");
+
+	boardHTML.addEventListener("mousedown", () => {
+		isDragging = true;
+	});
+
+	boardHTML.addEventListener("mouseup", () => {
+		isDragging = false;
+	});
 
 	boardButtons.forEach((button) => {
 		button.addEventListener("click", (event) => {
 			event.preventDefault();
-			const [row, column] = event.target.id.match(/\d+/g).map(Number);
-			if (SQUARE_MODE && board.getCellValue(row, column)) {
-				board.setMaskCellValue(row, column, true);
-				const cellHTML = document.getElementById(event.target.id);
-				cellHTML.outerHTML = `
-				<button class="item2"></button>
-				`;
-			} else if (!SQUARE_MODE && !board.getCellValue(row, column)) {
-				const cellHTML = document.getElementById(event.target.id);
-				cellHTML.outerHTML = `
-				<button class="item">
-					<i class="board-cross fa-solid fa-xmark"></i>
-				</button>
-				`;
-			}
 
-			const { vertical, horizontal } = board.checkLines(row, column);
-
-			if (vertical) {
-				for (let i = 0; i < board.size; i++) {
-					const cellHTML = document.getElementById(`${row}-${i}`);
-
-					if (cellHTML === null) continue;
-
+			if (event.target.id) {
+				const [row, column] = event.target.id.match(/\d+/g).map(Number);
+				if (SQUARE_MODE && board.getCellValue(row, column)) {
+					board.markCell(row, column, true);
+					board.setMaskCellValue(row, column, true);
+					const cellHTML = document.getElementById(event.target.id);
+					cellHTML.outerHTML = `
+					<button class="item2"></button>
+					`;
+				} else if (!SQUARE_MODE && !board.getCellValue(row, column)) {
+					const cellHTML = document.getElementById(event.target.id);
 					cellHTML.outerHTML = `
 					<button class="item">
 						<i class="board-cross fa-solid fa-xmark"></i>
 					</button>
 					`;
 				}
-			}
 
-			if (horizontal) {
-				for (let i = 0; i < board.size; i++) {
-					const cellHTML = document.getElementById(`${i}-${column}`);
+				const { vertical, horizontal } = board.checkLines(row, column);
 
-					if (cellHTML === null) continue;
+				if (vertical) {
+					for (let i = 0; i < board.size; i++) {
+						const cellHTML = document.getElementById(`${row}-${i}`);
 
-					cellHTML.outerHTML = `
-					<button class="item">
-						<i class="board-cross fa-solid fa-xmark"></i>
-					</button>
-					`;
+						if (cellHTML === null) continue;
+
+						board.markCell(row, i, true);
+
+						cellHTML.outerHTML = `
+						<button class="item">
+							<i class="board-cross fa-solid fa-xmark"></i>
+						</button>
+						`;
+					}
+				}
+
+				if (horizontal) {
+					for (let i = 0; i < board.size; i++) {
+						const cellHTML = document.getElementById(`${i}-${column}`);
+
+						if (cellHTML === null) continue;
+
+						board.markCell(i, column, true);
+
+						cellHTML.outerHTML = `
+						<button class="item">
+							<i class="board-cross fa-solid fa-xmark"></i>
+						</button>
+						`;
+					}
 				}
 			}
 		});
+
+		button.addEventListener("mousemove", (event) => {
+			if (isDragging && isMouseOverButton(event, button)) {
+				button.click();
+			}
+		});
 	});
+
+	function isMouseOverButton(event, button) {
+		const rect = button.getBoundingClientRect();
+		const mouseX = event.clientX;
+		const mouseY = event.clientY;
+		return (
+			mouseX >= rect.left &&
+			mouseX <= rect.right &&
+			mouseY >= rect.top &&
+			mouseY <= rect.bottom
+		);
+	}
 };
 
 export {
