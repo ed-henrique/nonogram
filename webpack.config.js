@@ -1,3 +1,4 @@
+import HtmlWebpackPlugin from "html-webpack-plugin";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -21,4 +22,10 @@ export default {
 			},
 		],
 	},
+	plugins: [
+		new HtmlWebpackPlugin({
+			favicon: "./public/favicon.ico",
+			template: "./public/index.html",
+		}),
+	],
 };

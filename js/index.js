@@ -5,10 +5,10 @@ import {
 	showBlockCountVertical,
 	listenBoardButtons,
 } from "./ui.js";
-import { switchMode } from "./mode-switch.js";
+import { setupSwitchButton } from "./mode-switch.js";
 
 showBoard();
 showBlockCountVertical();
 showBlockCountHorizontal();
-switchMode();
+setupSwitchButton();
 listenBoardButtons();

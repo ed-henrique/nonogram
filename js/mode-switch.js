@@ -1,31 +1,33 @@
-let SQUARE_MODE = false;
+let SQUARE_MODE = true;
 
-const switchMode = () => {
+const switchButtonHTML = document.querySelector(".switch");
+
+const toggleMode = () => {
 	SQUARE_MODE = !SQUARE_MODE;
 
-	const switchButtonHTML = document.querySelector(".switch");
+	const crossClass = SQUARE_MODE ? "not-selected" : "selected";
+	const squareClass = SQUARE_MODE ? "selected" : "not-selected";
 
+	const crossHTML = `
+	<div class="${crossClass}">
+	  <i class="cross fa-solid fa-xmark"></i>
+	</div>
+	`;
+
+	const squareHTML = `
+	<div class="${squareClass}">
+	  <i class="square fa-solid fa-square"></i>
+	</div>
+	`;
+
+	switchButtonHTML.innerHTML = crossHTML + squareHTML;
+};
+
+const setupSwitchButton = () => {
 	switchButtonHTML.addEventListener("click", (event) => {
-		SQUARE_MODE = !SQUARE_MODE;
-
+		toggleMode();
 		event.preventDefault();
-		const crossClass = SQUARE_MODE ? "not-selected" : "selected";
-		const squareClass = SQUARE_MODE ? "selected" : "not-selected";
-
-		const crossHTML = `
-		<div class="${crossClass}">
-		<i class="cross fa-solid fa-xmark"></i>
-		</div>
-		`;
-
-		const squareHTML = `
-		<div class="${squareClass}">
-		<i class="square fa-solid fa-square"></i>
-		</div>
-		`;
-
-		switchButtonHTML.innerHTML = crossHTML + squareHTML;
 	});
 };
 
-export { SQUARE_MODE, switchMode };
+export { SQUARE_MODE, toggleMode, setupSwitchButton };
