@@ -66,20 +66,50 @@ const listenBoardButtons = () => {
 	boardButtons.forEach((button) => {
 		button.addEventListener("click", (event) => {
 			event.preventDefault();
-			const [i, j] = event.target.id.match(/\d+/g).map(Number);
-			if (SQUARE_MODE && board.getCellValue(i, j)) {
-				board.setMaskCellValue(i, j, true);
+			const [row, column] = event.target.id.match(/\d+/g).map(Number);
+			if (SQUARE_MODE && board.getCellValue(row, column)) {
+				board.setMaskCellValue(row, column, true);
 				const cellHTML = document.getElementById(event.target.id);
 				cellHTML.outerHTML = `
 				<button class="item2"></button>
 				`;
-			} else if (!SQUARE_MODE && !board.getCellValue(i, j)) {
+			} else if (!SQUARE_MODE && !board.getCellValue(row, column)) {
 				const cellHTML = document.getElementById(event.target.id);
 				cellHTML.outerHTML = `
 				<button class="item">
 					<i class="board-cross fa-solid fa-xmark"></i>
 				</button>
 				`;
+			}
+
+			const { vertical, horizontal } = board.checkLines(row, column);
+
+			if (vertical) {
+				for (let i = 0; i < board.size; i++) {
+					const cellHTML = document.getElementById(`${row}-${i}`);
+
+					if (cellHTML === null) continue;
+
+					cellHTML.outerHTML = `
+					<button class="item">
+						<i class="board-cross fa-solid fa-xmark"></i>
+					</button>
+					`;
+				}
+			}
+
+			if (horizontal) {
+				for (let i = 0; i < board.size; i++) {
+					const cellHTML = document.getElementById(`${i}-${column}`);
+
+					if (cellHTML === null) continue;
+
+					cellHTML.outerHTML = `
+					<button class="item">
+						<i class="board-cross fa-solid fa-xmark"></i>
+					</button>
+					`;
+				}
 			}
 		});
 	});

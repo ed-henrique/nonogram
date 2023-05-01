@@ -137,6 +137,35 @@ class Board {
 		return blockNumberTotal;
 	}
 
+	checkLines(x, y) {
+		let checkLinesVertical = true;
+		for (let i = 0; i < this.size; i++) {
+			const cell = this.getCellValue(x, i);
+			const cellMask = this.getCellValue(x, i, true);
+
+			if (cell !== cellMask) {
+				checkLinesVertical = false;
+				break;
+			}
+		}
+
+		let checkLinesHorizontal = true;
+		for (let i = 0; i < this.size; i++) {
+			const cell = this.getCellValue(i, y);
+			const cellMask = this.getCellValue(i, y, true);
+
+			if (cell !== cellMask) {
+				checkLinesHorizontal = false;
+				break;
+			}
+		}
+
+		return {
+			vertical: checkLinesVertical,
+			horizontal: checkLinesHorizontal,
+		};
+	}
+
 	checkWin() {
 		return (
 			gridMask.length === grid.length &&

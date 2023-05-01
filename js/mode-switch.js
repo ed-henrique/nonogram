@@ -13,16 +13,16 @@ const switchMode = () => {
 		const squareClass = SQUARE_MODE ? "selected" : "not-selected";
 
 		const crossHTML = `
-    <div class="${crossClass}">
-      <i class="cross fa-solid fa-xmark"></i>
-    </div>
-    `;
+		<div class="${crossClass}">
+		<i class="cross fa-solid fa-xmark"></i>
+		</div>
+		`;
 
 		const squareHTML = `
-    <div class="${squareClass}">
-      <i class="square fa-solid fa-square"></i>
-    </div>
-    `;
+		<div class="${squareClass}">
+		<i class="square fa-solid fa-square"></i>
+		</div>
+		`;
 
 		switchButtonHTML.innerHTML = crossHTML + squareHTML;
 	});
