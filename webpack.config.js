@@ -5,8 +5,9 @@ import path from "path";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default {
-	entry: "./js/index.js",
+	entry: "./js/index.ts",
 	mode: "production",
+	devtool: "inline-source-map",
 	output: {
 		filename: "main.js",
 		path: path.resolve(__dirname, "dist"),
@@ -19,6 +20,12 @@ export default {
 			{
 				test: /\.css$/i,
 				use: ["style-loader", "css-loader"],
+				exclude: "/node_modules/",
+			},
+			{
+				test: /\.ts$/i,
+				use: "ts-loader",
+				exclude: "/node_modules/",
 			},
 		],
 	},
@@ -28,4 +35,7 @@ export default {
 			template: "./public/index.html",
 		}),
 	],
+	resolve: {
+		extensions: [".ts", ".js"],
+	},
 };

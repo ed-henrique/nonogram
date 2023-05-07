@@ -4,8 +4,8 @@ import {
 	showBlockCountHorizontal,
 	showBlockCountVertical,
 	listenBoardButtons,
-} from "./ui.js";
-import { setupSwitchButton } from "./mode-switch.js";
+} from "./ui";
+import { setupSwitchButton } from "./mode-switch";
 
 showBoard();
 showBlockCountVertical();

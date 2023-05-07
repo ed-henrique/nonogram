@@ -3,6 +3,7 @@ let SQUARE_MODE = true;
 const switchButtonHTML = document.querySelector(".switch");
 
 const toggleMode = () => {
+	if (!switchButtonHTML) return;
 	SQUARE_MODE = !SQUARE_MODE;
 
 	const crossClass = SQUARE_MODE ? "not-selected" : "selected";
@@ -24,6 +25,8 @@ const toggleMode = () => {
 };
 
 const setupSwitchButton = () => {
+	if (!switchButtonHTML) return;
+	
 	switchButtonHTML.addEventListener("click", (event) => {
 		toggleMode();
 		event.preventDefault();

@@ -1,12 +1,15 @@
-import { BOARD_SIZE, RANDOMNESS } from "./constants.js";
+import { BOARD_SIZE, RANDOMNESS } from "./constants";
 
 class Cell {
-	constructor(value = this.#cellValue()) {
-		this.value = value;
+	value: boolean;
+	marked: boolean;
+
+	constructor(value: boolean | null = null) {
+		this.value = value ?? this.cellValue();
 		this.marked = false;
 	}
 
-	#cellValue() {
+	cellValue() {
 		return Math.random() < RANDOMNESS;
 	}
 
@@ -26,13 +29,19 @@ class Cell {
 		return this.value;
 	}
 
-	setValue(value) {
+	setValue(value: boolean) {
 		this.value = value;
 	}
 }
 
 class Board {
-	constructor(size) {
+	size: number;
+	grid: Array<Array<Cell>>;
+	gridMask: Array<Array<Cell>>;
+	blockCountVertical: Array<Array<number>>;
+	blockCountHorizontal: Array<Array<number>>;
+
+	constructor(size: number) {
 		this.size = size;
 		this.grid = Array.from({ length: size }, () =>
 			Array.from({ length: size }, () => new Cell()),
@@ -40,8 +49,8 @@ class Board {
 		this.gridMask = Array.from({ length: size }, () =>
 			Array.from({ length: size }, () => new Cell(false)),
 		);
-		this.blockCountVertical = this.#blockCountVerticalValues();
-		this.blockCountHorizontal = this.#blockCountHorizontalValues();
+		this.blockCountVertical = this.blockCountVerticalValues();
+		this.blockCountHorizontal = this.blockCountHorizontalValues();
 	}
 
 	getBlockCountVertical() {
@@ -52,46 +61,46 @@ class Board {
 		return this.blockCountHorizontal;
 	}
 
-	getCell(x, y, mask = false) {
+	getCell(x: number, y: number, mask = false) {
 		const grid = mask ? this.gridMask : this.grid;
 		return x < 0 || y < 0 || x >= this.size || y >= this.size
 			? null
-			: grid[x][y];
+			: grid?.[x]?.[y];
 	}
 
-	getCellValue(x, y, mask = false) {
+	getCellValue(x: number, y: number, mask = false) {
 		const grid = mask ? this.gridMask : this.grid;
 		return x < 0 || y < 0 || x >= this.size || y >= this.size
 			? null
-			: grid[x][y].value;
+			: grid?.[x]?.[y]?.value;
 	}
 
-	setMaskCellValue(x, y, value) {
+	setMaskCellValue(x: number, y: number, value: boolean) {
 		x < 0 || y < 0 || x >= this.size || y >= this.size
 			? null
-			: this.gridMask[x][y].setValue(value);
+			: this.gridMask?.[x]?.[y]?.setValue(value);
 	}
 
-	markCell(x, y, mask = false) {
+	markCell(x: number, y: number, mask = false) {
 		const cell = mask ? this.getCell(x, y, mask) : this.getCell(x, y);
 		if (cell) {
 			cell.mark();
 		}
 	}
 
-	unmarkCell(x, y, mask = false) {
+	unmarkCell(x: number, y: number, mask = false) {
 		const cell = mask ? this.getCell(x, y, mask) : this.getCell(x, y);
 		if (cell) {
 			cell.unmark();
 		}
 	}
 
-	isCellMarked(x, y, mask = false) {
+	isCellMarked(x: number, y: number, mask = false) {
 		const cell = mask ? this.getCell(x, y, mask) : this.getCell(x, y);
 		return cell ? cell.isMarked() : false;
 	}
 
-	#blockCountVerticalValues() {
+	blockCountVerticalValues() {
 		const blockNumberTotal = [];
 
 		for (let i = 0; i < this.size; i++) {
@@ -114,7 +123,7 @@ class Board {
 		return blockNumberTotal;
 	}
 
-	#blockCountHorizontalValues() {
+	blockCountHorizontalValues() {
 		const blockNumberTotal = [];
 
 		for (let i = 0; i < this.size; i++) {
@@ -137,7 +146,7 @@ class Board {
 		return blockNumberTotal;
 	}
 
-	checkLines(x, y) {
+	checkLines(x: number, y: number) {
 		let checkLinesVertical = true;
 		for (let i = 0; i < this.size; i++) {
 			const cell = this.getCellValue(x, i);
@@ -170,7 +179,9 @@ class Board {
 		return (
 			this.gridMask.length === this.grid.length &&
 			this.gridMask.every((row, i) =>
-				row.every((val, j) => val === this.grid[i][j]),
+				row.every(
+					(val, j) => val.getValue() === this.grid?.[i]?.[j]?.getValue(),
+				),
 			)
 		);
 	}
